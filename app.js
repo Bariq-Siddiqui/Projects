@@ -17,9 +17,17 @@ const USER = mongoose.model('Users',
     }
     }
 );
+const POST = mongoose.model('Post', 
+    { 
+    post: String,
+    created: {
+        type: String,
+        default: Date.now
+    }
+    }
+);
 
 app.use(express.json());
-
 app.use('/',express.static(path.join(__dirname, 'web/build')));
 
 
@@ -57,10 +65,10 @@ app.post('/api/v1/signup', (req, res)=>{
     
 });
 
-// app.get('/api/v1/dashboard', (req, res)=>{
-//     USER.find({},(err, data)=>{
+// app.get('/api/v1/delete', (req, res)=>{
+//     USER.deleteOne({id: req.body._id},(err, data)=>{
 //         if(err){
-//             res.send('status 500, error in getting data base')
+//             res.send('status 500, error in deleting data base')
 //         }
 //         else{
 //             res.send(data)
@@ -69,7 +77,7 @@ app.post('/api/v1/signup', (req, res)=>{
 // });
 app.get('/api/v1/dashboard', (req, res) => {
 
-    USER.find({}, (err, data) => {
+    POST.find({}, (err, data) => {
 
         if(err){
             res.status(500).send("error in getting database")
@@ -79,6 +87,7 @@ app.get('/api/v1/dashboard', (req, res) => {
 
     })
 })
+
 
 app.post('/api/v1/login', (req, res)=>{
     if(!req.body.email || !req.body.password) {
@@ -109,6 +118,43 @@ app.post('/api/v1/login', (req, res)=>{
 app.get("/**", (req, res, next) => {
     res.redirect("/")
 })
+// router.route('/:id').delete((req,res) => {
+//     Exercise.findByIdAndDelete(req.params.id)
+//         .then(exercise => res.json('Exercise deleted'))
+//         .catch(err => res.status(400).json('Error: '+err));
+// });
+
+// app.post('/api/v1/createpost', (req, res)=>{
+//     if(!req.body.post){
+//         console.log("Post is missing");
+//         res.status(403).send("Post is missing");
+//     }
+//     else{
+//         let newPost = new POST(
+//             {
+//                 post: req.body.post
+//             }
+//         );
+//         newPost.save(()=>{
+//             console.log('Post has been created')
+//             res.send('Post has been created');   
+//         })       
+//     }    
+// });
+app.post('/api/v1/createpost', (req, res) => {
+
+    console.log(req.body)
+
+    let newPost = new POST({
+        post: req.body.post
+    })
+    newPost.save(() => {
+        console.log("data saved")
+        res.send('Post created')
+    })
+
+})
+
 app.listen(PORT, ()=>{
     console.log(`Example app listening at http://localhost:${PORT}`);
 }); 

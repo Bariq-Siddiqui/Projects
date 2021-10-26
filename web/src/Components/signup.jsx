@@ -1,19 +1,43 @@
+import * as yup from 'yup';
 import axios from 'axios';
 import './style.css';
 import {useFormik} from 'formik';
 import TextField from '@mui/material/TextField';
 import Button from '@mui/material/Button';
 import Grid from '@mui/material/Grid';
-
 import {
   useHistory
 } from "react-router-dom";
-const dev = 'http://localhost:8000';
 
+const dev = 'http://localhost:8000';
 const baseURL = window.location.hostname.split(':')[0] === 'localhost' ? dev : ""
+const validationSchema = yup.object({
+  fullName: yup
+  .string('Enter your Name')
+  .min(3, 'Name should be of minimum 3 characters length')
+  .max(20, 'No more then 20')  
+  .required('Name is required'),
+  email: yup
+    .string('Enter your email')
+    .email('Enter a valid email')
+    .required('Email is required'),
+  password: yup
+    .string('Enter your password')
+    .min(8, 'Password should be of minimum 8 characters length')
+    .max(10, 'No more then 10')
+    .required('Password is required'),
+    address: yup
+    .string('Enter your address')
+    .min(3, 'Address should be of minimum 3 characters length')
+    .max(20, 'No more then 20')  
+    .required('Address is required'),
+});
+
 function Signup() {
+  
   let history = useHistory();
   const formik = useFormik({
+    validationSchema: validationSchema,
     initialValues:{
       fullName: '',
       email: '',
@@ -40,78 +64,75 @@ function Signup() {
   return (
     <div className="signup">
       <Grid container spacing={2} alignItems="center" textAlign='center' padding='2%' justifyContent="center">
-                <Grid item xs={11} sm={10} md={9} lg={8}>
-      <h1 style={{color: "purple"}}>  SIGN UP </h1>
-       <form onSubmit={formik.handleSubmit}>
-        {/* <Stack spacing={3}> */}
-          <TextField
-            fullWidth
-            color="secondary"
-            id="outlined-basic"
-            label="Full Name"
-            variant="standard"
+        <Grid item xs={11} sm={10} md={9} lg={8}>
+          <h1 style={{color: "purple"}}>  SIGN UP </h1>
+            <form onSubmit={formik.handleSubmit}>
 
-            name="fullName"
-            value={formik.values.fullName}
-            onChange={formik.handleChange}
+              <TextField
+                fullWidth
+                color="secondary"
+                id="outlined-basic"
+                label="Full Name"
+                variant="standard"
+          
+                name="fullName"
+                value={formik.values.fullName}
+                onChange={formik.handleChange}
 
-            error={formik.touched.fullName && Boolean(formik.errors.fullName)}
-            helperText={formik.touched.fullName && formik.errors.fullName}
-          />
+                error={formik.touched.fullName && Boolean(formik.errors.fullName)}
+                helperText={formik.touched.fullName && formik.errors.fullName}
+              />
 
-          <TextField
-            fullWidth
-            color="secondary"
-            id="outlined-basic"
-            label="Email"
-            variant="standard"
-            type = "email"
-            name="email"
-            value={formik.values.email}
-            onChange={formik.handleChange}
+              <TextField
+                fullWidth
+                color="secondary"
+                id="outlined-basic"
+                label="Email"
+                variant="standard"
+                type = "email"
+                name="email"
+                value={formik.values.email}
+                onChange={formik.handleChange}
 
-            error={formik.touched.email && Boolean(formik.errors.email)}
-            helperText={formik.touched.email && formik.errors.email}
-          />
+                error={formik.touched.email && Boolean(formik.errors.email)}
+                helperText={formik.touched.email && formik.errors.email}
+              />
 
-          <TextField
-            fullWidth
-            color="secondary"
-            type="password"
-            id="filled-basic"
-            label="Password"
-            variant="standard"
-            name="password"
-            value={formik.values.password}
-            onChange={formik.handleChange}
+              <TextField
+                fullWidth
+                color="secondary"
+                type="password"
+                id="filled-basic"
+                label="Password"
+                variant="standard"
+                name="password"
+                value={formik.values.password}
+                onChange={formik.handleChange}
+           
+                error={formik.touched.password && Boolean(formik.errors.password)}
+                helperText={formik.touched.password && formik.errors.password}
+              >
+              </TextField>
+              <TextField
+                fullWidth
+                color="secondary"
+                id="filled-basic"
+                label="Address"
+                variant="standard"
+                type="address"
 
-            error={formik.touched.password && Boolean(formik.errors.password)}
-            helperText={formik.touched.password && formik.errors.password}
-            >
-            
+                name="address"
+                value={formik.values.address}
+                onChange={formik.handleChange}
 
-          </TextField>
-          <TextField
-            fullWidth
-            color="secondary"
-            id="filled-basic"
-            label="Address"
-            variant="standard"
-            type="address"
+                error={formik.touched.address && Boolean(formik.errors.address)}
+                helperText={formik.touched.address && formik.errors.address}
+              /> <br /><br />
 
-            name="address"
-            value={formik.values.address}
-            onChange={formik.handleChange}
-
-            error={formik.touched.address && Boolean(formik.errors.address)}
-            helperText={formik.touched.address && formik.errors.address}
-          /> <br /><br />
-
-          <Button  variant="contained" color="secondary" type="submit">Sign Up</Button>
-        {/* </Stack> */}
-      </form>
-      </Grid></Grid>
-      
+              <Button  variant="contained" color="secondary" type="submit">Sign Up</Button>
+            </form>
+        </Grid>
+      </Grid>
     </div>
   );
 }
